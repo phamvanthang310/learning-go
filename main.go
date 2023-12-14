@@ -1,9 +1,12 @@
 package main
 
 import (
+	"log"
 	"net/http"
 	"student-service/pkg/application/rest"
+	"student-service/pkg/config"
 	dataaccess "student-service/pkg/data-access"
+	appMiddlewares "student-service/pkg/middleware"
 	"student-service/pkg/service"
 
 	"github.com/labstack/echo/v4"
@@ -11,6 +14,13 @@ import (
 )
 
 func main() {
+	// Load config
+	if _, err := config.LoadConfig(); err != nil {
+		panic("Could not load app config")
+	}
+
+	log.Printf("==== config", config.APP_CONFIG)
+
 	sqlDB := dataaccess.InitializeSequelDB("postgres://user:password@localhost:5432/student-service?sslmode=disable")
 
 	// create student data access
@@ -19,8 +29,9 @@ func main() {
 	// create student service
 	studentService := service.NewStudentService(studentDA)
 
-	// create student API
+	// create APIs
 	studentAPI := rest.NewStudentAPI(studentService)
+	authApi := rest.NewAuthApi(studentService)
 
 	server := initializeHTTPServer()
 
@@ -30,7 +41,13 @@ func main() {
 	})
 
 	// Routes
+	server.POST("/register", authApi.Register)
 	server.GET("/students", studentAPI.List)
+
+	// Error handler
+	server.HTTPErrorHandler = appMiddlewares.ErrorHandler
+
+	// Middlewares
 
 	// server.GET("/login", example.Handle)
 

@@ -4,6 +4,8 @@ import (
 	"context"
 	"student-service/pkg/application/interfaces"
 	"student-service/pkg/application/model"
+	"student-service/pkg/data-access/dto"
+	"student-service/pkg/utils"
 )
 
 type studentService struct {
@@ -26,6 +28,28 @@ func (s *studentService) GetStudents(c context.Context) ([]model.Student, error)
 		}
 	}
 	return result, nil
+}
+
+func (s *studentService) Create(ctx context.Context, info model.RegisterInfo) error {
+	student := dto.Student{
+		Name:     info.Name,
+		Username: info.Username,
+		Password: utils.HashPassword(info.Password),
+	}
+
+	_, err := s.db.Create(ctx, &student)
+	return err
+}
+
+func (s *studentService) FindByUsername(ctx context.Context, username string) (model.Student, error) {
+	student, err := s.db.FindByUsername(ctx, username)
+
+	return model.Student{
+		Name:      student.Name,
+		Username:  student.Username,
+		Password:  student.Password,
+		CreatedAt: student.CreatedAt,
+	}, err
 }
 
 func NewStudentService(db interfaces.StudentDA) *studentService {
