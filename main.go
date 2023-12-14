@@ -42,17 +42,15 @@ func main() {
 
 	// Routes
 	server.POST("/register", authApi.Register)
-	server.GET("/students", studentAPI.List)
+	server.POST("/login", authApi.Login)
 
 	// Error handler
 	server.HTTPErrorHandler = appMiddlewares.ErrorHandler
 
 	// Middlewares
 
-	// server.GET("/login", example.Handle)
-
-	// authenticated := server.Group("", authnMiddleware)
-	// authenticated.GET("/me", example.Handle)
+	authenticated := server.Group("", appMiddlewares.Auth)
+	authenticated.GET("/students", studentAPI.List)
 
 	// teacher
 	// authenticated.GET("/classes", example.Handle)

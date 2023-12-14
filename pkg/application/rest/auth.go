@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"student-service/pkg/application/interfaces"
 	"student-service/pkg/application/model"
+	"student-service/pkg/utils"
 )
 
 type authRestApi struct {
@@ -24,7 +25,28 @@ func (a authRestApi) Register(e echo.Context) error {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Could not register new student")
 	}
 
-	return e.JSON(http.StatusOK, registerInfo)
+	return e.JSON(http.StatusCreated, registerInfo)
+}
+
+func (a authRestApi) Login(e echo.Context) error {
+	credential := new(model.LoginCredential)
+
+	if err := e.Bind(&credential); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "Invalid JSON request")
+	}
+
+	student, err := a.service.FindByUsername(e.Request().Context(), credential.Username)
+
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "Fail to login")
+	}
+
+	if err := utils.Compare(student.Password, credential.Password); err == nil {
+		token := utils.GenerateToken(student)
+		return e.JSON(http.StatusOK, map[string]string{"token": token})
+	}
+
+	return echo.NewHTTPError(http.StatusUnauthorized, "Fail to login")
 }
 
 func NewAuthApi(service interfaces.StudentService) *authRestApi {
