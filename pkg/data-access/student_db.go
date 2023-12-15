@@ -3,11 +3,8 @@ package dataaccess
 import (
 	"context"
 	"database/sql"
-	"student-service/pkg/data-access/dto"
-	"student-service/pkg/utils"
-	"time"
-
 	"github.com/uptrace/bun"
+	"student-service/pkg/data-access/dto"
 )
 
 type studentDA struct {
@@ -15,17 +12,10 @@ type studentDA struct {
 }
 
 func (s *studentDA) GetStudents(c context.Context) ([]dto.Student, error) {
-	// See more: https://bun.uptrace.dev/guide/
-	// var list []dto.Student
-	// s.dbc.NewSelect().Model(&list).Scan(c)
+	var list []dto.Student
+	err := s.dbc.NewSelect().Model(&list).Scan(c)
 
-	return []dto.Student{
-		{
-			ID:        "123",
-			Name:      utils.SampleUtil(),
-			CreatedAt: time.Now(),
-		},
-	}, nil
+	return list, err
 }
 
 func (s studentDA) Create(ctx context.Context, student *dto.Student) (sql.Result, error) {

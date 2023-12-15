@@ -24,6 +24,7 @@ func (s *studentService) GetStudents(c context.Context) ([]model.Student, error)
 		result[i] = model.Student{
 			ID:        v.ID,
 			Name:      v.Name,
+			Username:  v.Username,
 			CreatedAt: v.CreatedAt,
 		}
 	}
@@ -45,6 +46,7 @@ func (s *studentService) FindByUsername(ctx context.Context, username string) (m
 	student, err := s.db.FindByUsername(ctx, username)
 
 	return model.Student{
+		ID:        student.ID,
 		Name:      student.Name,
 		Username:  student.Username,
 		Password:  student.Password,

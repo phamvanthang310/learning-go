@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"net/http"
 	"student-service/pkg/application/rest"
 	"student-service/pkg/config"
@@ -18,8 +17,6 @@ func main() {
 	if _, err := config.LoadConfig(); err != nil {
 		panic("Could not load app config")
 	}
-
-	log.Printf("==== config", config.APP_CONFIG)
 
 	sqlDB := dataaccess.InitializeSequelDB("postgres://user:password@localhost:5432/student-service?sslmode=disable")
 
@@ -47,9 +44,9 @@ func main() {
 	// Error handler
 	server.HTTPErrorHandler = appMiddlewares.ErrorHandler
 
-	// Middlewares
-
+	// authenticated endpoints
 	authenticated := server.Group("", appMiddlewares.Auth)
+	authenticated.GET("/info", authApi.Info)
 	authenticated.GET("/students", studentAPI.List)
 
 	// teacher

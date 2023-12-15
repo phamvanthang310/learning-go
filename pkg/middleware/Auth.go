@@ -1,21 +1,21 @@
 package middleware
 
 import (
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
 	"log"
 	"net/http"
 	"strings"
+	"student-service/pkg/application/model"
+	"student-service/pkg/constant"
 	"student-service/pkg/utils"
 )
-
-const AUTH_HEADER = "Authorization"
-const CONTEXT_KEY = "claims"
 
 func Auth(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 
 		headers := c.Request().Header
-		token := strings.TrimPrefix(headers.Get(AUTH_HEADER), "Bearer ")
+		token := strings.TrimPrefix(headers.Get(constant.AuthHeader), "Bearer ")
 
 		log.Printf("token: [%s]", token)
 
@@ -25,7 +25,11 @@ func Auth(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 
 		if jwtToken.Valid {
-			c.Set(CONTEXT_KEY, jwtToken.Claims)
+			rawClaims := jwtToken.Claims.(jwt.MapClaims)
+			c.Set(constant.Claims, model.AuthClaims{
+				Name:     rawClaims["name"].(string),
+				Username: rawClaims["userName"].(string),
+			})
 			return next(c)
 		}
 

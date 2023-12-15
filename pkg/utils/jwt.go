@@ -5,6 +5,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"student-service/pkg/application/model"
 	"student-service/pkg/config"
+	"time"
 )
 
 type CustomClaims struct {
@@ -17,6 +18,9 @@ func GenerateToken(user model.Student) string {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &CustomClaims{
 		UserName: user.Username,
 		Name:     user.Name,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 1)), // Token expires in 1 hour
+		},
 	})
 	cfg, _ := config.LoadConfig()
 	jwtToken, _ := token.SignedString([]byte(cfg.SecretKey))
