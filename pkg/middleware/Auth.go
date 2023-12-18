@@ -26,7 +26,7 @@ func Auth(next echo.HandlerFunc) echo.HandlerFunc {
 
 		if jwtToken.Valid {
 			rawClaims := jwtToken.Claims.(jwt.MapClaims)
-			c.Set(constant.Claims, model.AuthClaims{
+			c.Set(constant.Claims, &model.AuthClaims{
 				Name:     rawClaims["name"].(string),
 				Username: rawClaims["userName"].(string),
 			})

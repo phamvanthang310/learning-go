@@ -18,7 +18,7 @@ func main() {
 		panic("Could not load app config")
 	}
 
-	sqlDB := dataaccess.InitializeSequelDB("postgres://user:password@localhost:5432/student-service?sslmode=disable")
+	sqlDB := dataaccess.InitializeSequelDB()
 
 	// create student data access
 	studentDA := dataaccess.NewStudentDA(sqlDB)

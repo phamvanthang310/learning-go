@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"student-service/pkg/application/interfaces"
 	"student-service/pkg/application/model"
-	"student-service/pkg/constant"
 	"student-service/pkg/utils"
 )
 
@@ -51,8 +50,11 @@ func (a authRestApi) Login(e echo.Context) error {
 }
 
 func (a authRestApi) Info(e echo.Context) error {
-	rawClaims := e.Get(constant.Claims)
-	claims := rawClaims.(model.AuthClaims)
+	claims, err := utils.GetTokenClaims(e)
+
+	if err != nil {
+		return err
+	}
 
 	student, err := a.service.FindByUsername(e.Request().Context(), claims.Username)
 
