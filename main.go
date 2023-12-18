@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/go-playground/validator/v10"
 	"net/http"
 	"student-service/pkg/application/rest"
 	"student-service/pkg/config"
@@ -43,6 +44,9 @@ func main() {
 
 	// Error handler
 	server.HTTPErrorHandler = appMiddlewares.ErrorHandler
+	server.Validator = &appMiddlewares.CustomValidator{
+		Validator: validator.New(),
+	}
 
 	// authenticated endpoints
 	authenticated := server.Group("", appMiddlewares.Auth)

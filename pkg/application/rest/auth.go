@@ -15,9 +15,8 @@ type authRestApi struct {
 
 func (a authRestApi) Register(e echo.Context) error {
 	registerInfo := new(model.RegisterInfo)
-
-	if err := e.Bind(&registerInfo); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "Invalid JSON request")
+	if err := utils.BindAndValidate(registerInfo, e); err != nil {
+		return err
 	}
 
 	if err := a.service.Create(e.Request().Context(), *registerInfo); err != nil {
@@ -30,9 +29,8 @@ func (a authRestApi) Register(e echo.Context) error {
 
 func (a authRestApi) Login(e echo.Context) error {
 	credential := new(model.LoginCredential)
-
-	if err := e.Bind(&credential); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "Invalid JSON request")
+	if err := utils.BindAndValidate(credential, e); err != nil {
+		return err
 	}
 
 	student, err := a.service.FindByUsername(e.Request().Context(), credential.Username)
