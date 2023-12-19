@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func BindAndValidate(i interface{}, e echo.Context) error {
+func BindAndValidate(e echo.Context, i interface{}) error {
 	if err := e.Bind(i); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "Invalid JSON request")
 	}

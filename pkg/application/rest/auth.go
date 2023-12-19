@@ -15,21 +15,22 @@ type authRestApi struct {
 
 func (a authRestApi) Register(e echo.Context) error {
 	registerInfo := new(model.RegisterInfo)
-	if err := utils.BindAndValidate(registerInfo, e); err != nil {
+	if err := utils.BindAndValidate(e, registerInfo); err != nil {
 		return err
 	}
 
-	if err := a.service.Create(e.Request().Context(), *registerInfo); err != nil {
+	student, err := a.service.Create(e.Request().Context(), *registerInfo)
+	if err != nil {
 		log.Print(err)
 		return echo.NewHTTPError(http.StatusInternalServerError, "Could not register new student")
 	}
 
-	return e.JSON(http.StatusCreated, registerInfo)
+	return e.JSON(http.StatusCreated, student)
 }
 
 func (a authRestApi) Login(e echo.Context) error {
 	credential := new(model.LoginCredential)
-	if err := utils.BindAndValidate(credential, e); err != nil {
+	if err := utils.BindAndValidate(e, credential); err != nil {
 		return err
 	}
 
