@@ -8,4 +8,12 @@ type Teacher struct {
 	Username  string    `json:"username"`
 	Password  string    `json:"password"`
 	CreatedAt time.Time `json:"createdAt"`
+	Role      string    `json:"-"`
+}
+
+type NewTeacherRequest struct {
+	Name      string    `json:"name"`
+	Username  string    `json:"username"`
+	Password  string    `json:"password"`
+	CreatedAt time.Time `json:"createdAt"`
 }

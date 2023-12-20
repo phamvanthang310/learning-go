@@ -4,7 +4,8 @@ CREATE TABLE teacher
     name       VARCHAR(255)        NOT NULL,
     username   VARCHAR(255) UNIQUE NOT NULL,
     password   VARCHAR(255)        NOT NULL,
-    created_at TIMESTAMP           NULL DEFAULT now()
+    role       VARCHAR(255)        NOT NULL DEFAULT 'teacher',
+    created_at TIMESTAMP           NULL     DEFAULT now()
 );
 
 CREATE TABLE class
@@ -19,20 +20,13 @@ CREATE TABLE class
         FOREIGN KEY (managed_by) REFERENCES teacher (id)
 );
 
-CREATE TABLE subject
-(
-    id         SERIAL       NOT NULL PRIMARY KEY,
-    name       VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP    NULL DEFAULT now()
-);
-
-CREATE TABLE class_subject
+CREATE TABLE student_class
 (
     class_id   INT NOT NULL,
-    subject_id INT NOT NULL,
-    PRIMARY KEY (class_id, subject_id),
+    student_id INT NOT NULL,
+    PRIMARY KEY (class_id, student_id),
     CONSTRAINT class_fk
         FOREIGN KEY (class_id) REFERENCES class (id),
-    CONSTRAINT subject_fk
-        FOREIGN KEY (subject_id) REFERENCES subject (id)
+    CONSTRAINT student_fk
+        FOREIGN KEY (student_id) REFERENCES student (id)
 )

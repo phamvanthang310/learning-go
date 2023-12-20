@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"github.com/uptrace/bun"
+	"student-service/pkg/application/interfaces"
 	"student-service/pkg/data-access/dto"
 )
 
@@ -21,6 +22,12 @@ func (c classDA) GetById(ctx context.Context, id string) (*dto.Class, error) {
 	return class, err
 }
 
-func NewClassDA(db *bun.DB) *classDA {
+func (c *classDA) GetAll(ctx context.Context) ([]dto.Class, error) {
+	var result []dto.Class
+	err := c.db.NewSelect().Model(&result).Relation("Students").Column("class.*").Relation("Teacher").Scan(ctx)
+	return result, err
+}
+
+func NewClassDA(db *bun.DB) interfaces.ClassDA {
 	return &classDA{db}
 }

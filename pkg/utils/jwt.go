@@ -12,6 +12,7 @@ import (
 )
 
 type CustomClaims struct {
+	ID       string `json:"id"`
 	UserName string `json:"userName"`
 	Name     string `json:"name"`
 	jwt.RegisteredClaims
@@ -19,6 +20,7 @@ type CustomClaims struct {
 
 func GenerateToken(user model.Student) string {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &CustomClaims{
+		ID:       user.ID,
 		UserName: user.Username,
 		Name:     user.Name,
 		RegisteredClaims: jwt.RegisteredClaims{

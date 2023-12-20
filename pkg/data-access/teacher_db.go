@@ -10,7 +10,7 @@ type teacherDA struct {
 	dbc *bun.DB
 }
 
-func (t *teacherDA) GetTeachers(c context.Context) ([]dto.Teacher, error) {
+func (t *teacherDA) GetAll(c context.Context) ([]dto.Teacher, error) {
 	var teachers []dto.Teacher
 	err := t.dbc.NewSelect().Model(&teachers).Scan(c)
 
@@ -24,10 +24,10 @@ func (t *teacherDA) GetByUserName(c context.Context, username string) (dto.Teach
 	return *teacher, err
 }
 
-func (t *teacherDA) Create(ctx context.Context, teacher *dto.Teacher) (dto.Teacher, error) {
+func (t *teacherDA) Create(ctx context.Context, teacher *dto.Teacher) error {
 	_, err := t.dbc.NewInsert().Model(teacher).Exec(ctx)
 
-	return *teacher, err
+	return err
 }
 
 func NewTeacherDA(dbc *bun.DB) *teacherDA {

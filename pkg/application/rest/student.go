@@ -2,14 +2,18 @@ package rest
 
 import (
 	"fmt"
+	"github.com/labstack/echo/v4"
 	"net/http"
 	"student-service/pkg/application/interfaces"
-
-	"github.com/labstack/echo/v4"
 )
 
 type studentAPI struct {
 	studentService interfaces.StudentService
+}
+
+func (api *studentAPI) Login(ctx echo.Context) error {
+	//TODO implement me
+	panic("implement me")
 }
 
 func (api *studentAPI) List(c echo.Context) error {
@@ -22,6 +26,6 @@ func (api *studentAPI) List(c echo.Context) error {
 	return c.JSON(http.StatusOK, students)
 }
 
-func NewStudentAPI(studentService interfaces.StudentService) *studentAPI {
-	return &studentAPI{studentService}
+func NewStudentAPI(s interfaces.StudentService) interfaces.StudentAPI {
+	return &studentAPI{s}
 }

@@ -24,15 +24,18 @@ func main() {
 	// create student data access
 	studentDA := dataaccess.NewStudentDA(sqlDB)
 	classDA := dataaccess.NewClassDA(sqlDB)
+	teacherDA := dataaccess.NewTeacherDA(sqlDB)
 
 	// create student service
 	studentService := service.NewStudentService(studentDA)
 	classService := service.NewClassService(classDA)
+	teacherService := service.NewTeacherService(teacherDA)
 
 	// create APIs
 	studentAPI := rest.NewStudentAPI(studentService)
 	authApi := rest.NewAuthApi(studentService)
 	classApi := rest.NewClassApi(classService)
+	teacherApi := rest.NewTeacherApi(teacherService)
 
 	server := initializeHTTPServer()
 
@@ -57,9 +60,9 @@ func main() {
 	authenticated.GET("/students", studentAPI.List)
 
 	// teacher
-	//authenticated.GET("/classes", example.Handle)
+	authenticated.POST("/teacher", teacherApi.Create)
 	authenticated.POST("/classes", classApi.Create)
-	// authenticated.PATCH("/classes/:classId", example.Handle)
+	authenticated.GET("/classes", classApi.GetAll)
 
 	// admin
 	// authenticated.GET("/users", example.Handle)

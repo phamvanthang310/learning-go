@@ -12,13 +12,22 @@ type classApi struct {
 	service interfaces.ClassService
 }
 
-func (c classApi) Create(e echo.Context) error {
-	newClass := new(model.NewClass)
-	if err := utils.BindAndValidate(e, newClass); err != nil {
+func (c classApi) GetAll(e echo.Context) error {
+	result, err := c.service.GetAll(e)
+	if err != nil {
 		return err
 	}
 
-	class, err := c.service.Create(e, newClass)
+	return e.JSON(http.StatusOK, result)
+}
+
+func (c classApi) Create(e echo.Context) error {
+	class := new(model.Class)
+	if err := utils.BindAndValidate(e, class); err != nil {
+		return err
+	}
+
+	err := c.service.Create(e, class)
 
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Could not create new class")

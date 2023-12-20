@@ -8,20 +8,21 @@ import (
 type (
 	Class struct {
 		bun.BaseModel `bun:"table:class"`
-		ID            int64      `bun:"id,pk,autoincrement"`
-		Name          string     `bun:"name"`
-		StartDate     time.Time  `bun:"start_date"`
-		EndDate       time.Time  `bun:"end_date"`
-		CreatedAt     time.Time  `bun:"created_at,default:current_timestamp"`
-		Subjects      []*Subject `bun:"m2m:class_subject,join:Class=Subject"`
-		ManagedBy     *Teacher   `bun:"rel:has-one,join:managed_by=id"`
+		ID            string    `bun:"id,pk,autoincrement"`
+		Name          string    `bun:"name"`
+		StartDate     time.Time `bun:"start_date"`
+		EndDate       time.Time `bun:"end_date"`
+		CreatedAt     time.Time `bun:"created_at,default:current_timestamp"`
+		ManagedBy     string    `bun:"managed_by"`
+		Teacher       *Teacher  `bun:"rel:belongs-to,join:managed_by=id"`
+		Students      []Student `bun:"m2m:student_class,join:Class=Student"`
 	}
 
-	SubjectOfClass struct {
-		bun.BaseModel `bun:"table:class_subject"`
-		ClassID       int64    `bun:",pk"`
+	StudentClass struct {
+		bun.BaseModel `bun:"table:student_class"`
+		ClassID       string   `bun:"class_id,pk"`
 		Class         *Class   `bun:"rel:belongs-to,join:class_id=id"`
-		SubjectID     int64    `bun:",pk"`
-		Subject       *Subject `bun:"rel:belongs-to,join:subject_id=id"`
+		StudentID     string   `bun:"student_id,pk"`
+		Student       *Student `bun:"rel:belongs-to,join:student_id=id"`
 	}
 )

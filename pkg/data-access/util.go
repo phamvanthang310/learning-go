@@ -24,7 +24,7 @@ func InitializeSequelDB() *bun.DB {
 	var sqlDB *sql.DB = stdlib.OpenDB(*pgxConfig)
 
 	db := bun.NewDB(sqlDB, pgdialect.New())
-	db.RegisterModel((*dto.SubjectOfClass)(nil))
+	db.RegisterModel((*dto.StudentClass)(nil))
 
 	return db
 }

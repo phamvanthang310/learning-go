@@ -7,9 +7,10 @@ import (
 
 type Teacher struct {
 	bun.BaseModel `bun:"table:teacher"`
-	ID            int64     `bun:"pk,autoincrement"`
+	ID            string    `bun:"id,pk,autoincrement"`
 	Name          string    `bun:"name"`
 	Username      string    `bun:"username"`
 	Password      string    `bun:"password"`
+	Role          string    `bun:"role"`
 	CreatedAt     time.Time `bun:"created_at,default:current_timestamp"`
 }
