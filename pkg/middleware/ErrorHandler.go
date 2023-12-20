@@ -9,9 +9,8 @@ import (
 )
 
 type ErrorResponse struct {
-	Message   string `json:"message"`
-	Code      int    `json:"code"`
-	ErrorType string `json:"type"`
+	Message string `json:"message"`
+	Code    int    `json:"code"`
 }
 
 func ErrorHandler(err error, c echo.Context) {
@@ -28,7 +27,6 @@ func ErrorHandler(err error, c echo.Context) {
 	response := ErrorResponse{
 		message,
 		code,
-		"",
 	}
 
 	c.JSON(code, &response)

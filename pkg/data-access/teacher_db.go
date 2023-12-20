@@ -3,6 +3,7 @@ package dataaccess
 import (
 	"context"
 	"github.com/uptrace/bun"
+	"student-service/pkg/application/interfaces"
 	"student-service/pkg/data-access/dto"
 )
 
@@ -19,7 +20,7 @@ func (t *teacherDA) GetAll(c context.Context) ([]dto.Teacher, error) {
 
 func (t *teacherDA) GetByUserName(c context.Context, username string) (dto.Teacher, error) {
 	teacher := new(dto.Teacher)
-	_, err := t.dbc.NewSelect().Model(teacher).Where("id = ?", username).Exec(c)
+	err := t.dbc.NewSelect().Model(teacher).Where("username = ?", username).Scan(c)
 
 	return *teacher, err
 }
@@ -30,7 +31,7 @@ func (t *teacherDA) Create(ctx context.Context, teacher *dto.Teacher) error {
 	return err
 }
 
-func NewTeacherDA(dbc *bun.DB) *teacherDA {
+func NewTeacherDA(dbc *bun.DB) interfaces.TeacherDA {
 	return &teacherDA{
 		dbc,
 	}

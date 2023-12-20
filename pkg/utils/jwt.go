@@ -15,14 +15,16 @@ type CustomClaims struct {
 	ID       string `json:"id"`
 	UserName string `json:"userName"`
 	Name     string `json:"name"`
+	Role     string `json:"role"`
 	jwt.RegisteredClaims
 }
 
-func GenerateToken(user model.Student) string {
+func GenerateToken(user model.User) string {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &CustomClaims{
 		ID:       user.ID,
 		UserName: user.Username,
 		Name:     user.Name,
+		Role:     user.Role,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 1)), // Token expires in 1 hour
 		},

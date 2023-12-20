@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"github.com/uptrace/bun"
+	"student-service/pkg/application/interfaces"
 	"student-service/pkg/data-access/dto"
 )
 
@@ -28,7 +29,6 @@ func (s studentDA) FindByUsername(ctx context.Context, username string) (dto.Stu
 	return *user, err
 }
 
-// NewStudentDA creates a new Student Data Access
-func NewStudentDA(dbc *bun.DB) *studentDA {
+func NewStudentDA(dbc *bun.DB) interfaces.StudentDA {
 	return &studentDA{dbc}
 }

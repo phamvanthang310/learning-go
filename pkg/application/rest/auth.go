@@ -37,15 +37,15 @@ func (a authRestApi) Login(e echo.Context) error {
 	student, err := a.service.FindByUsername(e.Request().Context(), credential.Username)
 
 	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "Fail to login")
+		return echo.NewHTTPError(http.StatusUnauthorized, "Invalid credential")
 	}
 
 	if err := utils.Compare(student.Password, credential.Password); err == nil {
-		token := utils.GenerateToken(student)
+		token := utils.GenerateToken(student.User)
 		return e.JSON(http.StatusOK, map[string]string{"token": token})
 	}
 
-	return echo.NewHTTPError(http.StatusUnauthorized, "Fail to login")
+	return echo.NewHTTPError(http.StatusUnauthorized, "Invalid credential")
 }
 
 func (a authRestApi) Info(e echo.Context) error {

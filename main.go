@@ -47,6 +47,7 @@ func main() {
 	// Routes
 	server.POST("/register", authApi.Register)
 	server.POST("/login", authApi.Login)
+	server.POST("/teacher/login", teacherApi.Login)
 
 	// Error handler
 	server.HTTPErrorHandler = appMiddlewares.ErrorHandler

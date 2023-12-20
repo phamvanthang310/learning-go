@@ -30,6 +30,7 @@ func Auth(next echo.HandlerFunc) echo.HandlerFunc {
 				ID:       rawClaims["id"].(string),
 				Name:     rawClaims["name"].(string),
 				Username: rawClaims["userName"].(string),
+				Role:     rawClaims["role"].(string),
 			})
 			return next(c)
 		}

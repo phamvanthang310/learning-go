@@ -21,12 +21,7 @@ func (s *studentService) GetStudents(c context.Context) ([]model.Student, error)
 	// map from dto to model
 	result := make([]model.Student, len(list))
 	for i, v := range list {
-		result[i] = model.Student{
-			ID:        v.ID,
-			Name:      v.Name,
-			Username:  v.Username,
-			CreatedAt: v.CreatedAt,
-		}
+		result[i] = mapToStudentModel(v)
 	}
 	return result, nil
 }
@@ -50,11 +45,13 @@ func (s *studentService) FindByUsername(ctx context.Context, username string) (m
 
 func mapToStudentModel(s dto.Student) model.Student {
 	return model.Student{
-		ID:        s.ID,
-		Name:      s.Name,
-		Username:  s.Username,
-		Password:  s.Password,
-		CreatedAt: s.CreatedAt,
+		User: model.User{
+			ID:        s.ID,
+			Name:      s.Name,
+			Username:  s.Username,
+			Password:  s.Password,
+			CreatedAt: s.CreatedAt,
+		},
 	}
 }
 

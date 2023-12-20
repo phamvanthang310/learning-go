@@ -10,6 +10,7 @@ import (
 type (
 	TeacherApi interface {
 		Create(e echo.Context) error
+		Login(e echo.Context) error
 	}
 
 	TeacherDA interface {
@@ -20,5 +21,6 @@ type (
 
 	TeacherService interface {
 		Create(e echo.Context, teacher *model.Teacher) error
+		FindByUserName(e echo.Context, username string) (model.Teacher, error)
 	}
 )

@@ -12,6 +12,11 @@ type teacherService struct {
 	db interfaces.TeacherDA
 }
 
+func (t teacherService) FindByUserName(e echo.Context, username string) (model.Teacher, error) {
+	teacher, err := t.db.GetByUserName(e.Request().Context(), username)
+	return mapToTeacherModel(&teacher), err
+}
+
 func (t teacherService) Create(e echo.Context, teacher *model.Teacher) error {
 	teacherDto := &dto.Teacher{
 		Name:     teacher.Name,
@@ -30,12 +35,14 @@ func (t teacherService) Create(e echo.Context, teacher *model.Teacher) error {
 
 func mapToTeacherModel(t *dto.Teacher) model.Teacher {
 	return model.Teacher{
-		ID:        t.ID,
-		Name:      t.Name,
-		Username:  t.Username,
-		Password:  t.Password,
-		CreatedAt: t.CreatedAt,
-		Role:      t.Role,
+		User: model.User{
+			ID:        t.ID,
+			Name:      t.Name,
+			Username:  t.Username,
+			Password:  t.Password,
+			CreatedAt: t.CreatedAt,
+			Role:      t.Role,
+		},
 	}
 }
 

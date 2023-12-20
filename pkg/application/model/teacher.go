@@ -2,7 +2,7 @@ package model
 
 import "time"
 
-type Teacher struct {
+type User struct {
 	ID        string    `json:"id"`
 	Name      string    `json:"name"`
 	Username  string    `json:"username"`
@@ -11,9 +11,6 @@ type Teacher struct {
 	Role      string    `json:"-"`
 }
 
-type NewTeacherRequest struct {
-	Name      string    `json:"name"`
-	Username  string    `json:"username"`
-	Password  string    `json:"password"`
-	CreatedAt time.Time `json:"createdAt"`
+type Teacher struct {
+	User
 }
