@@ -11,7 +11,7 @@ import (
 	"student-service/pkg/utils"
 )
 
-func Auth(next echo.HandlerFunc) echo.HandlerFunc {
+func Authentication(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 
 		headers := c.Request().Header
@@ -36,5 +36,25 @@ func Auth(next echo.HandlerFunc) echo.HandlerFunc {
 		}
 
 		return echo.NewHTTPError(http.StatusUnauthorized, "Unauthorized user")
+	}
+}
+
+func Authorization(roles ...string) echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			claims, err := utils.GetTokenClaims(c)
+
+			if err != nil {
+				return echo.ErrForbidden
+			}
+
+			for _, v := range roles {
+				if v == claims.Role {
+					return next(c)
+				}
+			}
+
+			return echo.ErrForbidden
+		}
 	}
 }

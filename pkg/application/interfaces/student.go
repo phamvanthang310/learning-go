@@ -12,6 +12,8 @@ type (
 	StudentAPI interface {
 		Login(ctx echo.Context) error
 		List(ctx echo.Context) error
+		Profile(ctx echo.Context) error
+		Create(ctx echo.Context) error
 	}
 
 	StudentDA interface {

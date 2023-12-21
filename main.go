@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"student-service/pkg/application/rest"
 	"student-service/pkg/config"
+	"student-service/pkg/constant"
 	dataaccess "student-service/pkg/data-access"
 	appMiddlewares "student-service/pkg/middleware"
 	"student-service/pkg/service"
@@ -32,22 +33,11 @@ func main() {
 	teacherService := service.NewTeacherService(teacherDA)
 
 	// create APIs
-	studentAPI := rest.NewStudentAPI(studentService)
-	authApi := rest.NewAuthApi(studentService)
+	studentApi := rest.NewStudentAPI(studentService)
 	classApi := rest.NewClassApi(classService)
 	teacherApi := rest.NewTeacherApi(teacherService)
 
 	server := initializeHTTPServer()
-
-	// Index page
-	server.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "It works!")
-	})
-
-	// Routes
-	server.POST("/register", authApi.Register)
-	server.POST("/login", authApi.Login)
-	server.POST("/teacher/login", teacherApi.Login)
 
 	// Error handler
 	server.HTTPErrorHandler = appMiddlewares.ErrorHandler
@@ -55,20 +45,30 @@ func main() {
 		Validator: validator.New(),
 	}
 
-	// authenticated endpoints
-	authenticated := server.Group("", appMiddlewares.Auth)
-	authenticated.GET("/info", authApi.Info)
-	authenticated.GET("/students", studentAPI.List)
+	// Index page
+	server.GET("/", func(c echo.Context) error {
+		return c.String(http.StatusOK, "It works!")
+	})
+
+	// Public routes
+	server.POST("/student/login", studentApi.Login)
+	server.POST("/login", teacherApi.Login)
+
+	// student
+	authenticated := server.Group("", appMiddlewares.Authentication)
+	authenticated.GET("/profile", studentApi.Profile)
 
 	// teacher
-	authenticated.POST("/teacher", teacherApi.Create)
-	authenticated.POST("/classes", classApi.Create)
-	authenticated.GET("/classes", classApi.GetAll)
+	teacherRoute := server.Group("", appMiddlewares.Authentication, appMiddlewares.Authorization(constant.TeacherRole, constant.AdminRole))
+	teacherRoute.POST("/teacher", teacherApi.Create)
+	teacherRoute.POST("/classes", classApi.Create)
+	teacherRoute.GET("/classes", classApi.GetAll)
 
 	// admin
-	// authenticated.GET("/users", example.Handle)
-	// authenticated.POST("/users", example.Handle)
-	// authenticated.PATCH("/users/:userId", example.Handle)
+	adminRoute := server.Group("", appMiddlewares.Authentication, appMiddlewares.Authorization(constant.AdminRole))
+	adminRoute.POST("/register/student", studentApi.Create)
+	adminRoute.POST("/register/teacher", teacherApi.Create)
+	adminRoute.GET("/students", studentApi.List)
 
 	// Start listening
 	server.Logger.Fatal(server.Start("127.0.0.1:8080"))
