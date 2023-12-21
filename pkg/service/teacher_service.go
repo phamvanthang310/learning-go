@@ -17,20 +17,20 @@ func (t teacherService) FindByUserName(e echo.Context, username string) (model.T
 	return mapToTeacherModel(&teacher), err
 }
 
-func (t teacherService) Create(e echo.Context, teacher *model.Teacher) error {
+func (t teacherService) Create(e echo.Context, registerInfo *model.RegisterInfo) (*model.Teacher, error) {
 	teacherDto := &dto.Teacher{
-		Name:     teacher.Name,
-		Username: teacher.Username,
-		Password: utils.HashPassword(teacher.Password),
+		Name:     registerInfo.Name,
+		Username: registerInfo.Username,
+		Password: utils.HashPassword(registerInfo.Password),
 		Role:     "teacher",
 	}
 
 	if err := t.db.Create(e.Request().Context(), teacherDto); err != nil {
-		return err
+		return nil, err
 	}
 
-	*teacher = mapToTeacherModel(teacherDto)
-	return nil
+	teacher := mapToTeacherModel(teacherDto)
+	return &teacher, nil
 }
 
 func mapToTeacherModel(t *dto.Teacher) model.Teacher {

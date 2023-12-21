@@ -20,7 +20,7 @@ type (
 	}
 
 	TeacherService interface {
-		Create(e echo.Context, teacher *model.Teacher) error
+		Create(e echo.Context, registerInfo *model.RegisterInfo) (*model.Teacher, error)
 		FindByUserName(e echo.Context, username string) (model.Teacher, error)
 	}
 )

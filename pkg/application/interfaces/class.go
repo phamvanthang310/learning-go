@@ -17,7 +17,7 @@ type (
 	ClassDA interface {
 		Create(ctx context.Context, class *dto.Class) (sql.Result, error)
 		GetById(ctx context.Context, id string) (*dto.Class, error)
-		GetAll(ctx context.Context, username string) ([]dto.Class, error)
+		GetAllManaged(ctx context.Context, username string) ([]dto.Class, error)
 	}
 
 	ClassService interface {

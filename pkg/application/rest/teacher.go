@@ -2,6 +2,7 @@ package rest
 
 import (
 	"github.com/labstack/echo/v4"
+	"log"
 	"net/http"
 	"student-service/pkg/application/interfaces"
 	"student-service/pkg/application/model"
@@ -19,6 +20,8 @@ func (t teacherApi) Login(e echo.Context) error {
 	}
 
 	teacher, err := t.service.FindByUserName(e, credential.Username)
+	log.Print(teacher)
+
 	if err != nil {
 		return echo.NewHTTPError(http.StatusUnauthorized, "Invalid credential")
 	}
@@ -27,17 +30,20 @@ func (t teacherApi) Login(e echo.Context) error {
 		token := utils.GenerateToken(teacher.User)
 		return e.JSON(http.StatusOK, map[string]string{"token": token})
 	}
+	log.Print(err)
 
 	return echo.NewHTTPError(http.StatusUnauthorized, "Invalid credential")
 }
 
 func (t teacherApi) Create(e echo.Context) error {
-	teacher := new(model.Teacher)
-	if err := utils.BindAndValidate(e, teacher); err != nil {
+	info := new(model.RegisterInfo)
+	if err := utils.BindAndValidate(e, info); err != nil {
 		return err
 	}
 
-	if err := t.service.Create(e, teacher); err != nil {
+	teacher, err := t.service.Create(e, info)
+
+	if err != nil {
 		return err
 	}
 

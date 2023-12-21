@@ -27,7 +27,7 @@ func (s *classService) Create(e echo.Context, c *model.Class) error {
 }
 
 func (s *classService) GetAll(ctx echo.Context, username string) ([]model.Class, error) {
-	classDtos, err := s.da.GetAll(ctx.Request().Context(), username)
+	classDtos, err := s.da.GetAllManaged(ctx.Request().Context(), username)
 	var result []model.Class
 	for _, item := range classDtos {
 		result = append(result, mapToClassModel(item))

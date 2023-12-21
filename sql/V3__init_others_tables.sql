@@ -17,7 +17,7 @@ CREATE TABLE class
     end_date   TIMESTAMP           NOT NULL,
     created_at TIMESTAMP           NULL     DEFAULT now(),
     CONSTRAINT class_teacher
-        FOREIGN KEY (managed_by) REFERENCES teacher (id)
+        FOREIGN KEY (managed_by) REFERENCES teacher (id) ON DELETE CASCADE
 );
 
 CREATE TABLE student_class
@@ -26,7 +26,7 @@ CREATE TABLE student_class
     student_id INT NOT NULL,
     PRIMARY KEY (class_id, student_id),
     CONSTRAINT class_fk
-        FOREIGN KEY (class_id) REFERENCES class (id),
+        FOREIGN KEY (class_id) REFERENCES class (id) ON DELETE CASCADE,
     CONSTRAINT student_fk
-        FOREIGN KEY (student_id) REFERENCES student (id)
+        FOREIGN KEY (student_id) REFERENCES student (id) ON DELETE CASCADE
 )
