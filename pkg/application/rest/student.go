@@ -68,7 +68,7 @@ func (api *studentAPI) Login(e echo.Context) error {
 		return echo.NewHTTPError(http.StatusUnauthorized, "Invalid credential")
 	}
 
-	if err := utils.Compare(student.Password, credential.Password); err == nil {
+	if err := utils.ComparePassword(student.Password, credential.Password); err == nil {
 		token := utils.GenerateToken(student.User)
 		return e.JSON(http.StatusOK, map[string]string{"token": token})
 	}

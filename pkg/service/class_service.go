@@ -3,6 +3,8 @@ package service
 import (
 	"database/sql"
 	"github.com/labstack/echo/v4"
+	"log"
+	"net/http"
 	"student-service/pkg/application/interfaces"
 	"student-service/pkg/application/model"
 	"student-service/pkg/data-access/dto"
@@ -11,6 +13,32 @@ import (
 
 type classService struct {
 	da interfaces.ClassDA
+}
+
+func (s *classService) GetById(e echo.Context, id string, userId string) (*model.Class, error) {
+	classDto, err := s.da.GetById(e.Request().Context(), id, userId)
+
+	if classDto == nil {
+		return nil, echo.NewHTTPError(http.StatusNotFound, "Class not found")
+	}
+
+	result := mapToClassModel(*classDto)
+	return &result, err
+}
+
+func (s *classService) AssignStudent(e echo.Context, classId string, studentIds []string, userId string) error {
+	_, err := s.GetById(e, classId, userId)
+	if err != nil {
+		return err
+	}
+
+	_, err = s.da.AssignStudent(e.Request().Context(), classId, studentIds)
+	if err != nil {
+		log.Print(err)
+		return echo.ErrInternalServerError
+	}
+
+	return nil
 }
 
 func (s *classService) DeleteById(e echo.Context, id string) (sql.Result, error) {
@@ -32,8 +60,8 @@ func (s *classService) Create(e echo.Context, c *model.Class) error {
 	return err
 }
 
-func (s *classService) GetAllManaged(ctx echo.Context, username string) ([]model.Class, error) {
-	classDtos, err := s.da.GetAllManaged(ctx.Request().Context(), username)
+func (s *classService) GetAllManaged(ctx echo.Context, userId string) ([]model.Class, error) {
+	classDtos, err := s.da.GetAllManaged(ctx.Request().Context(), userId)
 	var result []model.Class
 	for _, item := range classDtos {
 		result = append(result, mapToClassModel(item))

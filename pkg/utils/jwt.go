@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/labstack/echo/v4"
-	"net/http"
 	"student-service/pkg/application/model"
 	"student-service/pkg/config"
 	"student-service/pkg/constant"
@@ -49,7 +48,7 @@ func GetTokenClaims(e echo.Context) (*model.AuthClaims, error) {
 	claims, ok := rawClaims.(*model.AuthClaims)
 
 	if !ok {
-		return nil, echo.NewHTTPError(http.StatusBadRequest, "Fail to parse claim token")
+		return nil, echo.ErrForbidden
 	}
 
 	return claims, nil

@@ -60,13 +60,17 @@ func main() {
 	authenticated.GET("/class", studentApi.GetClasses)
 
 	// teacher
-	teacherRoute := server.Group("/teacher", appMiddlewares.Authentication, appMiddlewares.Authorization(constant.TeacherRole, constant.AdminRole))
+	teacherRoute := server.Group("/teacher", appMiddlewares.Authentication,
+		appMiddlewares.Authorization(constant.TeacherRole, constant.AdminRole))
 	teacherRoute.POST("/class", classApi.Create)
 	teacherRoute.GET("/class", classApi.GetAll)
 	teacherRoute.DELETE("/class/:id", classApi.DeleteById)
+	teacherRoute.GET("/class/:id", classApi.GetById)
+	teacherRoute.POST("/class/assign/:id", classApi.AssignStudent)
 
 	// admin
-	adminRoute := server.Group("admin", appMiddlewares.Authentication, appMiddlewares.Authorization(constant.AdminRole))
+	adminRoute := server.Group("admin", appMiddlewares.Authentication,
+		appMiddlewares.Authorization(constant.AdminRole))
 	adminRoute.POST("/student", studentApi.Create)
 	adminRoute.POST("/teacher", teacherApi.Create)
 	adminRoute.GET("/students", studentApi.List)

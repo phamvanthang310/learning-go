@@ -11,3 +11,7 @@ type Class struct {
 	Students  []Student `json:"students,omitempty"`
 	ManagedBy *Teacher  `json:"managedBy,omitempty"`
 }
+
+type AssignStudent struct {
+	StudentIds []string `json:"studentIds" validate:"required"`
+}

@@ -26,7 +26,7 @@ func (t teacherApi) Login(e echo.Context) error {
 		return echo.NewHTTPError(http.StatusUnauthorized, "Invalid credential")
 	}
 
-	if err = utils.Compare(teacher.Password, credential.Password); err == nil {
+	if err = utils.ComparePassword(teacher.Password, credential.Password); err == nil {
 		token := utils.GenerateToken(teacher.User)
 		return e.JSON(http.StatusOK, map[string]string{"token": token})
 	}

@@ -45,7 +45,7 @@ func Authorization(roles ...string) echo.MiddlewareFunc {
 			claims, err := utils.GetTokenClaims(c)
 
 			if err != nil {
-				return echo.ErrForbidden
+				return err
 			}
 
 			for _, v := range roles {
