@@ -17,11 +17,11 @@ type (
 	ClassDA interface {
 		Create(ctx context.Context, class *dto.Class) (sql.Result, error)
 		GetById(ctx context.Context, id string) (*dto.Class, error)
-		GetAll(ctx context.Context) ([]dto.Class, error)
+		GetAll(ctx context.Context, username string) ([]dto.Class, error)
 	}
 
 	ClassService interface {
 		Create(ctx echo.Context, c *model.Class) error
-		GetAll(ctx echo.Context) ([]model.Class, error)
+		GetAll(ctx echo.Context, username string) ([]model.Class, error)
 	}
 )

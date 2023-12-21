@@ -22,9 +22,14 @@ func (c classDA) GetById(ctx context.Context, id string) (*dto.Class, error) {
 	return class, err
 }
 
-func (c *classDA) GetAll(ctx context.Context) ([]dto.Class, error) {
+func (c *classDA) GetAll(ctx context.Context, username string) ([]dto.Class, error) {
 	var result []dto.Class
-	err := c.db.NewSelect().Model(&result).Relation("Students").Column("class.*").Relation("Teacher").Scan(ctx)
+	err := c.db.NewSelect().Model(&result).
+		Relation("Students").
+		Column("class.*").
+		Where("class.managed_by = ?", username).
+		Scan(ctx)
+
 	return result, err
 }
 

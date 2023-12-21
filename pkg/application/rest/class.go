@@ -13,7 +13,11 @@ type classApi struct {
 }
 
 func (c classApi) GetAll(e echo.Context) error {
-	result, err := c.service.GetAll(e)
+	claims, err := utils.GetTokenClaims(e)
+	if err != nil {
+		return echo.ErrForbidden
+	}
+	result, err := c.service.GetAll(e, claims.ID)
 	if err != nil {
 		return err
 	}

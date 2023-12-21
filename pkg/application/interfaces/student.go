@@ -14,17 +14,20 @@ type (
 		List(ctx echo.Context) error
 		Profile(ctx echo.Context) error
 		Create(ctx echo.Context) error
+		GetClasses(ctx echo.Context) error
 	}
 
 	StudentDA interface {
 		Create(ctx context.Context, student *dto.Student) (sql.Result, error)
 		FindByUsername(ctx context.Context, username string) (dto.Student, error)
 		GetStudents(context.Context) ([]dto.Student, error)
+		GetClasses(ctx context.Context, username string) ([]dto.Class, error)
 	}
 
 	StudentService interface {
 		Create(ctx context.Context, info model.RegisterInfo) (model.Student, error)
 		FindByUsername(ctx context.Context, username string) (model.Student, error)
 		GetStudents(context.Context) ([]model.Student, error)
+		GetClasses(context.Context, string) ([]model.Class, error)
 	}
 )

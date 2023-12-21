@@ -14,6 +14,17 @@ type studentAPI struct {
 	studentService interfaces.StudentService
 }
 
+func (api *studentAPI) GetClasses(e echo.Context) error {
+	claims, _ := utils.GetTokenClaims(e)
+	classes, err := api.studentService.GetClasses(e.Request().Context(), claims.Username)
+
+	if err != nil {
+		return err
+	}
+
+	return e.JSON(http.StatusOK, classes)
+}
+
 func (api *studentAPI) Create(e echo.Context) error {
 	registerInfo := new(model.RegisterInfo)
 	if err := utils.BindAndValidate(e, registerInfo); err != nil {

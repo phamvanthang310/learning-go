@@ -12,6 +12,17 @@ type studentService struct {
 	db interfaces.StudentDA
 }
 
+func (s *studentService) GetClasses(ctx context.Context, username string) ([]model.Class, error) {
+	classDtos, err := s.db.GetClasses(ctx, username)
+	result := make([]model.Class, len(classDtos))
+
+	for i, v := range classDtos {
+		result[i] = mapToClassModel(v)
+	}
+
+	return result, err
+}
+
 func (s *studentService) GetStudents(c context.Context) ([]model.Student, error) {
 	list, err := s.db.GetStudents(c)
 	if err != nil {
@@ -44,6 +55,12 @@ func (s *studentService) FindByUsername(ctx context.Context, username string) (m
 }
 
 func mapToStudentModel(s dto.Student) model.Student {
+	classes := make([]model.Class, len(s.Classes))
+
+	for i, v := range s.Classes {
+		classes[i] = mapToClassModel(v)
+	}
+
 	return model.Student{
 		User: model.User{
 			ID:        s.ID,
@@ -52,6 +69,7 @@ func mapToStudentModel(s dto.Student) model.Student {
 			Password:  s.Password,
 			CreatedAt: s.CreatedAt,
 		},
+		Classes: classes,
 	}
 }
 

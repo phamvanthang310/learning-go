@@ -51,23 +51,23 @@ func main() {
 	})
 
 	// Public routes
-	server.POST("/student/login", studentApi.Login)
 	server.POST("/login", teacherApi.Login)
+	server.POST("/student/login", studentApi.Login)
 
 	// student
-	authenticated := server.Group("", appMiddlewares.Authentication)
+	authenticated := server.Group("/student", appMiddlewares.Authentication)
 	authenticated.GET("/profile", studentApi.Profile)
+	authenticated.GET("/class", studentApi.GetClasses)
 
 	// teacher
-	teacherRoute := server.Group("", appMiddlewares.Authentication, appMiddlewares.Authorization(constant.TeacherRole, constant.AdminRole))
-	teacherRoute.POST("/teacher", teacherApi.Create)
-	teacherRoute.POST("/classes", classApi.Create)
-	teacherRoute.GET("/classes", classApi.GetAll)
+	teacherRoute := server.Group("/teacher", appMiddlewares.Authentication, appMiddlewares.Authorization(constant.TeacherRole, constant.AdminRole))
+	teacherRoute.POST("/class", classApi.Create)
+	teacherRoute.GET("/class", classApi.GetAll)
 
 	// admin
-	adminRoute := server.Group("", appMiddlewares.Authentication, appMiddlewares.Authorization(constant.AdminRole))
-	adminRoute.POST("/register/student", studentApi.Create)
-	adminRoute.POST("/register/teacher", teacherApi.Create)
+	adminRoute := server.Group("admin", appMiddlewares.Authentication, appMiddlewares.Authorization(constant.AdminRole))
+	adminRoute.POST("/student", studentApi.Create)
+	adminRoute.POST("/teacher", teacherApi.Create)
 	adminRoute.GET("/students", studentApi.List)
 
 	// Start listening
