@@ -1,6 +1,7 @@
 package service
 
 import (
+	"database/sql"
 	"github.com/labstack/echo/v4"
 	"student-service/pkg/application/interfaces"
 	"student-service/pkg/application/model"
@@ -10,6 +11,11 @@ import (
 
 type classService struct {
 	da interfaces.ClassDA
+}
+
+func (s *classService) DeleteById(e echo.Context, id string) (sql.Result, error) {
+	claims, _ := utils.GetTokenClaims(e)
+	return s.da.DeleteById(e.Request().Context(), id, claims.ID)
 }
 
 func (s *classService) Create(e echo.Context, c *model.Class) error {
@@ -26,7 +32,7 @@ func (s *classService) Create(e echo.Context, c *model.Class) error {
 	return err
 }
 
-func (s *classService) GetAll(ctx echo.Context, username string) ([]model.Class, error) {
+func (s *classService) GetAllManaged(ctx echo.Context, username string) ([]model.Class, error) {
 	classDtos, err := s.da.GetAllManaged(ctx.Request().Context(), username)
 	var result []model.Class
 	for _, item := range classDtos {

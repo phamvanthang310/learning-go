@@ -12,6 +12,13 @@ type classDA struct {
 	db *bun.DB
 }
 
+func (c *classDA) DeleteById(ctx context.Context, id string, userId string) (sql.Result, error) {
+	return c.db.NewDelete().
+		Model((*dto.Class)(nil)).
+		Where("id = ?", id).
+		Where("managed_by = ?", userId).Exec(ctx)
+}
+
 func (c *classDA) Create(ctx context.Context, class *dto.Class) (sql.Result, error) {
 	return c.db.NewInsert().Model(class).Exec(ctx)
 }

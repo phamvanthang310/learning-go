@@ -2,6 +2,7 @@ package rest
 
 import (
 	"github.com/labstack/echo/v4"
+	"log"
 	"net/http"
 	"student-service/pkg/application/interfaces"
 	"student-service/pkg/application/model"
@@ -12,12 +13,32 @@ type classApi struct {
 	service interfaces.ClassService
 }
 
+func (c classApi) DeleteById(e echo.Context) error {
+	id := e.Param("id")
+
+	result, err := c.service.DeleteById(e, id)
+
+	if err != nil {
+		log.Print(err)
+		return echo.ErrInternalServerError
+	}
+
+	if no, err := result.RowsAffected(); err != nil {
+		log.Print(err)
+		return echo.ErrInternalServerError
+	} else if no == 0 {
+		return echo.ErrNotFound
+	}
+
+	return e.JSON(http.StatusNoContent, "")
+}
+
 func (c classApi) GetAll(e echo.Context) error {
 	claims, err := utils.GetTokenClaims(e)
 	if err != nil {
 		return echo.ErrForbidden
 	}
-	result, err := c.service.GetAll(e, claims.ID)
+	result, err := c.service.GetAllManaged(e, claims.ID)
 	if err != nil {
 		return err
 	}

@@ -63,6 +63,7 @@ func main() {
 	teacherRoute := server.Group("/teacher", appMiddlewares.Authentication, appMiddlewares.Authorization(constant.TeacherRole, constant.AdminRole))
 	teacherRoute.POST("/class", classApi.Create)
 	teacherRoute.GET("/class", classApi.GetAll)
+	teacherRoute.DELETE("/class/:id", classApi.DeleteById)
 
 	// admin
 	adminRoute := server.Group("admin", appMiddlewares.Authentication, appMiddlewares.Authorization(constant.AdminRole))
