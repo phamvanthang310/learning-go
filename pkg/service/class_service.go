@@ -32,7 +32,15 @@ func (s *classService) AssignStudent(e echo.Context, classId string, studentIds 
 		return err
 	}
 
-	_, err = s.da.AssignStudent(e.Request().Context(), classId, studentIds)
+	studentClass := make([]dto.StudentClass, len(studentIds))
+	for i, v := range studentIds {
+		studentClass[i] = dto.StudentClass{
+			StudentID: v,
+			ClassID:   classId,
+		}
+	}
+
+	_, err = s.da.AssignStudent(e.Request().Context(), studentClass)
 	if err != nil {
 		log.Print(err)
 		return echo.ErrInternalServerError

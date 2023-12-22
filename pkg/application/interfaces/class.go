@@ -22,7 +22,7 @@ type (
 		GetById(ctx context.Context, id string, userId string) (*dto.Class, error)
 		GetAllManaged(ctx context.Context, userId string) ([]dto.Class, error)
 		DeleteById(ctx context.Context, id string, userId string) (sql.Result, error)
-		AssignStudent(ctx context.Context, classId string, studentIds []string) (sql.Result, error)
+		AssignStudent(ctx context.Context, students []dto.StudentClass) (sql.Result, error)
 	}
 
 	ClassService interface {

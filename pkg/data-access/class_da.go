@@ -12,16 +12,7 @@ type classDA struct {
 	db *bun.DB
 }
 
-func (c *classDA) AssignStudent(ctx context.Context, classId string, studentIds []string) (sql.Result, error) {
-	studentClass := make([]dto.StudentClass, len(studentIds))
-
-	for i, v := range studentIds {
-		studentClass[i] = dto.StudentClass{
-			StudentID: v,
-			ClassID:   classId,
-		}
-	}
-
+func (c *classDA) AssignStudent(ctx context.Context, studentClass []dto.StudentClass) (sql.Result, error) {
 	return c.db.NewInsert().Model(&studentClass).Exec(ctx)
 }
 

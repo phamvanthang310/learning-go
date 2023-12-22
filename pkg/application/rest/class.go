@@ -46,7 +46,8 @@ func (c classApi) AssignStudent(e echo.Context) error {
 		return err
 	}
 
-	return e.JSON(http.StatusOK, assignStudent.StudentIds)
+	class, _ := c.service.GetById(e, classId, claims.ID)
+	return e.JSON(http.StatusOK, class)
 }
 
 func (c classApi) DeleteById(e echo.Context) error {
