@@ -13,6 +13,15 @@ type teacherApi struct {
 	service interfaces.TeacherService
 }
 
+func (t teacherApi) Delete(e echo.Context) error {
+	teacherId := e.Param("id")
+	if err := t.service.Delete(e, teacherId); err != nil {
+		return err
+	}
+
+	return e.JSON(http.StatusNoContent, "")
+}
+
 func (t teacherApi) GetAll(e echo.Context) error {
 	teachers, err := t.service.GetAll(e)
 	if err != nil {

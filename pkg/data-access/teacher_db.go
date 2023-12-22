@@ -2,6 +2,7 @@ package dataaccess
 
 import (
 	"context"
+	"database/sql"
 	"github.com/uptrace/bun"
 	"student-service/pkg/application/interfaces"
 	"student-service/pkg/data-access/dto"
@@ -9,6 +10,10 @@ import (
 
 type teacherDA struct {
 	dbc *bun.DB
+}
+
+func (t *teacherDA) Delete(c context.Context, id string) (sql.Result, error) {
+	return t.dbc.NewDelete().Model((*dto.Teacher)(nil)).Where("id = ?", id).Exec(c)
 }
 
 func (t *teacherDA) GetAll(c context.Context) ([]dto.Teacher, error) {

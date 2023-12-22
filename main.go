@@ -74,6 +74,7 @@ func main() {
 	adminRoute.POST("/student", studentApi.Create)
 	adminRoute.GET("/students", studentApi.List)
 	adminRoute.POST("/teacher", teacherApi.Create)
+	adminRoute.DELETE("/teacher/:id", teacherApi.Delete)
 	adminRoute.GET("/teachers", teacherApi.GetAll)
 
 	// Start listening

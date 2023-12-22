@@ -13,6 +13,20 @@ type teacherService struct {
 	db interfaces.TeacherDA
 }
 
+func (t teacherService) Delete(e echo.Context, id string) error {
+	if sqlResult, err := t.db.Delete(e.Request().Context(), id); err != nil {
+		log.Print(err)
+		return echo.ErrInternalServerError
+	} else if count, err := sqlResult.RowsAffected(); err != nil {
+		log.Print(err)
+		return echo.ErrInternalServerError
+	} else if count == 0 {
+		return echo.ErrNotFound
+	}
+
+	return nil
+}
+
 func (t teacherService) GetAll(e echo.Context) ([]model.Teacher, error) {
 	teachers, err := t.db.GetAll(e.Request().Context())
 	if err != nil {
