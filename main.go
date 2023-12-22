@@ -72,8 +72,9 @@ func main() {
 	adminRoute := server.Group("admin", appMiddlewares.Authentication,
 		appMiddlewares.Authorization(constant.AdminRole))
 	adminRoute.POST("/student", studentApi.Create)
-	adminRoute.POST("/teacher", teacherApi.Create)
 	adminRoute.GET("/students", studentApi.List)
+	adminRoute.POST("/teacher", teacherApi.Create)
+	adminRoute.GET("/teachers", teacherApi.GetAll)
 
 	// Start listening
 	server.Logger.Fatal(server.Start("127.0.0.1:8080"))

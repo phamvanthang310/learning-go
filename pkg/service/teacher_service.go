@@ -2,6 +2,7 @@ package service
 
 import (
 	"github.com/labstack/echo/v4"
+	"log"
 	"student-service/pkg/application/interfaces"
 	"student-service/pkg/application/model"
 	"student-service/pkg/data-access/dto"
@@ -10,6 +11,21 @@ import (
 
 type teacherService struct {
 	db interfaces.TeacherDA
+}
+
+func (t teacherService) GetAll(e echo.Context) ([]model.Teacher, error) {
+	teachers, err := t.db.GetAll(e.Request().Context())
+	if err != nil {
+		log.Print(err)
+		return nil, echo.ErrInternalServerError
+	}
+
+	result := make([]model.Teacher, len(teachers))
+	for i, v := range teachers {
+		result[i] = mapToTeacherModel(&v)
+	}
+
+	return result, nil
 }
 
 func (t teacherService) FindByUserName(e echo.Context, username string) (model.Teacher, error) {

@@ -13,6 +13,15 @@ type teacherApi struct {
 	service interfaces.TeacherService
 }
 
+func (t teacherApi) GetAll(e echo.Context) error {
+	teachers, err := t.service.GetAll(e)
+	if err != nil {
+		return err
+	}
+
+	return e.JSON(http.StatusOK, teachers)
+}
+
 func (t teacherApi) Login(e echo.Context) error {
 	credential := new(model.LoginCredential)
 	if err := utils.BindAndValidate(e, credential); err != nil {
